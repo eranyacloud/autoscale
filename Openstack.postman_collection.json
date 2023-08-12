@@ -1,0 +1,4112 @@
+{
+	"info": {
+		"_postman_id": "486b17d1-9091-4c71-8b29-ac17b62f3205",
+		"name": "Openstack",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3710165"
+	},
+	"item": [
+		{
+			"name": "keystone (token)",
+			"item": [
+				{
+					"name": "auth get token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setGlobalVariable(\"X-Auth-Token\",postman.getResponseHeader(\"X-Subject-Token\") );\r",
+									"pm.environment.set(\"X-Auth-Token\", postman.getResponseHeader(\"X-Subject-Token\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"auth\": {\r\n    \"identity\": {\r\n      \"methods\": [\"password\"],\r\n      \"password\": {\r\n        \"user\": {\r\n          \"name\": \"admin\",\r\n          \"domain\": { \"id\": \"default\" },\r\n          \"password\": \"{{adminPass}}\"\r\n        }\r\n      }\r\n    },\r\n    \"scope\": {\r\n      \"project\": {\r\n        \"name\": \"admin\",\r\n        \"domain\": { \"id\": \"default\" }\r\n      }\r\n    }\r\n  }\r\n}\r\n\r\n\r\n\r\n\r\n\r\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/auth/tokens",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"auth",
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/users/",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list role",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/roles",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create a user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"user\": {\"name\": \"anjo\", \"password\": \"8uvTB9NUXiQCT8\"}}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/users",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show details user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"user\": {\"name\": \"newuser\", \"password\": \"changeme\"}}"
+						},
+						"url": {
+							"raw": "http://{{ip}}:5000/v3/users/{{userRef}}",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"users",
+								"{{userRef}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change password user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"user\": {\"password\": \"123\", \"original_password\": \"changeme\"} }"
+						},
+						"url": {
+							"raw": "http://{{ip}}:5000/v3/users/{{userRef}}/password",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"users",
+								"{{userRef}}",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/projects/",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"projects",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project\": {\n        \"description\": \"ali for test every things\",\n        \"domain_id\": \"default\",\n        \"enabled\": true,\n        \"is_domain\": true,\n        \"name\": \"ali\"\n    }\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/projects/",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"projects",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "role assign on project",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/projects/c6502ec137664564949a90fa15318b9c/users/240138c18eda44b0ab4466c1d17195f1/roles/6081fd64e8354eff8ad1b39e4fff379a",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"projects",
+								"c6502ec137664564949a90fa15318b9c",
+								"users",
+								"240138c18eda44b0ab4466c1d17195f1",
+								"roles",
+								"6081fd64e8354eff8ad1b39e4fff379a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show qouta project",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-quota-sets/{{project_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-quota-sets",
+								"{{project_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list project for one user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/users/8223f60dbc8f4bf9aef25671c642e089/projects",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"users",
+								"8223f60dbc8f4bf9aef25671c642e089",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete project for user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/projects/0dceea63c60c402ba402adcf5c45bc46/users/8223f60dbc8f4bf9aef25671c642e089/roles/7a718de9bc564e3e8ca54c53d1da58c5",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"projects",
+								"0dceea63c60c402ba402adcf5c45bc46",
+								"users",
+								"8223f60dbc8f4bf9aef25671c642e089",
+								"roles",
+								"7a718de9bc564e3e8ca54c53d1da58c5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "disable project",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project\": {\n        \"enabled\": false\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ip}}:5000/v3/projects/8913790c99e44666ab4aea7fd9d0dad4",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "5000",
+							"path": [
+								"v3",
+								"projects",
+								"8913790c99e44666ab4aea7fd9d0dad4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "glance (image)",
+			"item": [
+				{
+					"name": "get list image",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9292/v2/images",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9292",
+							"path": [
+								"v2",
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"container_format\": \"bare\",\r\n    \"disk_format\": \"qcow2\",\r\n    \"name\": \"cirros-api\"\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:9292/v2/images",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9292",
+							"path": [
+								"v2",
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list snapshot",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9292/v2/images?image_type=snapshot",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9292",
+							"path": [
+								"v2",
+								"images"
+							],
+							"query": [
+								{
+									"key": "image_type",
+									"value": "snapshot"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list backup",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9292/v2/images?image_type=backup",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9292",
+							"path": [
+								"v2",
+								"images"
+							],
+							"query": [
+								{
+									"key": "image_type",
+									"value": "backup"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "flavor (pattern)",
+			"item": [
+				{
+					"name": "get list flavor",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/flavors",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"flavors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list flavor with detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{ip}}:8774/v2.1/flavors/detail",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"flavors",
+								"detail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create flavor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"flavor\": {\r\n        \"name\": \"test_flavor\",\r\n        \"ram\": 1024,\r\n        \"vcpus\": 2,\r\n        \"disk\": 10\r\n    }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://{{ip}}:8774/v2.1/flavors",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"flavors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete flavor",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{ip}}:8774/v2.1/flavors/{{flavorRef}}",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"flavors",
+								"{{flavorRef}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "neutron (network)",
+			"item": [
+				{
+					"name": "get list network",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/networks?provider:network_type=vlan",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"networks"
+							],
+							"query": [
+								{
+									"key": "provider:network_type",
+									"value": "vlan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create network",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"network\": {\r\n        \"admin_state_up\": true,\r\n        \"name\": \"private_network_test_1\",\r\n        \"provider:network_type\": \"vxlan\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/networks",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"networks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list subnets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/subnets",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"subnets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create subnets",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"subnet\": {\r\n        \"name\": \"name_subnet\",\r\n        \"network_id\": \"838cdc2e-99e4-4df7-af4c-00019029f943\",\r\n        \"ip_version\": 4,\r\n        \"cidr\": \"192.168.200.0/24\",\r\n        \"gateway_ip\": null\r\n    }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/subnets",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"subnets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list available",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/network-ip-availabilities",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"network-ip-availabilities"
+							]
+						},
+						"description": "Network IP availability and usage stats"
+					},
+					"response": []
+				},
+				{
+					"name": "get security groups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/security-groups",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"security-groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create security groups",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"security_group\": {\r\n        \"name\": \"new\",\r\n        \"description\": \"security group for ... \",\r\n        \"stateful\": true\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/security-groups",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"security-groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete security groups",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/security-groups/61f4714b-0b90-45a4-b286-ac1f24fa09f6",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"security-groups",
+								"61f4714b-0b90-45a4-b286-ac1f24fa09f6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail security groups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/security-groups/2499d49e-1324-4c9e-b4e2-d3c1bb9f00cd",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"security-groups",
+								"2499d49e-1324-4c9e-b4e2-d3c1bb9f00cd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create security groups rule",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"security_group_rule\": {\r\n        \"direction\": \"ingress\",\r\n        \"security_group_id\": \"2499d49e-1324-4c9e-b4e2-d3c1bb9f00cd\"\r\n\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/security-group-rules",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"security-group-rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete security groups rule",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/security-group-rules/cc0b0576-bdf3-46d7-a12a-78eb0e377fb2",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"security-group-rules",
+								"cc0b0576-bdf3-46d7-a12a-78eb0e377fb2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list Router",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/routers",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"routers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete Router by id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/routers/ROUTER_ID",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"routers",
+								"ROUTER_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Router",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"router\": {\n        \"name\": \"router1\",\n        \"external_gateway_info\": {\n            \"network_id\": \"8f76016e-a35b-4e81-9b7c-e62f3b570652\",\n            \"enable_snat\": true,\n            \"external_fixed_ips\": [\n                {\n                    \"ip_address\": \"185.255.91.100\",\n                    \"subnet_id\": \"8594350e-9eab-4048-8eab-7529dc2368a0\"\n                }\n            ]\n        },\n        \"admin_state_up\": true\n    }\n}\n"
+						},
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/routers",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"routers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Interface to  Router",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"subnet_id\": \"2417f56b-6368-463d-bfa4-591ffc392e4d\"\n}"
+						},
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/routers/35aa6439-d554-450d-9581-14491f83a231/add_router_interface",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"routers",
+								"35aa6439-d554-450d-9581-14491f83a231",
+								"add_router_interface"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list Floating ip pool",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/floatingip_pools",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"floatingip_pools"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list Floating IP",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/floatingips",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"floatingips"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Floating IP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"floatingip\": {\n        \"floating_network_id\": \"8f76016e-a35b-4e81-9b7c-e62f3b570652\",\n        \"description\": \"floating ip for aref test\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/floatingips/",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"floatingips",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attach Floating IP to an instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"type": "text",
+								"value": "{{X-Auth-Token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"port_forwarding\": {\n    \"protocol\": \"tcp\",\n    \"internal_ip_address\": \"192.168.200.221\",\n    \"internal_port\": 25,\n    \"internal_port_id\": \"1238be08-a2a8-4b8d-addf-fb5e2250e480\",\n    \"external_port\": 2230,\n    \"description\": \"Some description\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/floatingips/543af3ba-fc40-48c8-a4b2-cfa17a4f413e/port_forwardings",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"floatingips",
+								"543af3ba-fc40-48c8-a4b2-cfa17a4f413e",
+								"port_forwardings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Floating IP by id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{ip}}:9696/v2.0/floatingips/ffc8c232-c09b-4b93-922e-eb6861f3bf50",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"floatingips",
+								"ffc8c232-c09b-4b93-922e-eb6861f3bf50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list port with instance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/ports?device_owner=compute:nova&network_id=8f76016e-a35b-4e81-9b7c-e62f3b570652&device_id=d9c00f13-f2f9-48e7-91ee-1387434c6ee4",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"ports"
+							],
+							"query": [
+								{
+									"key": "device_owner",
+									"value": "compute:nova"
+								},
+								{
+									"key": "network_id",
+									"value": "8f76016e-a35b-4e81-9b7c-e62f3b570652"
+								},
+								{
+									"key": "device_id",
+									"value": "d9c00f13-f2f9-48e7-91ee-1387434c6ee4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list qos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/qos/policies",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"qos",
+								"policies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update subnets",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"subnet\": {\r\n        \"gateway_ip\": \"192.168.20.92\",\r\n        \"allocation_pools\":[\r\n            {\r\n                \"start\": \"192.168.20.1\",\r\n                \"end\": \"192.168.20.91\"\r\n            },\r\n            {\r\n                \"start\": \"192.168.20.93\",\r\n                \"end\": \"192.168.20.254\"\r\n            }\r\n        ]\r\n    }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:9696/v2.0/subnets/032aef6a-f60f-4b27-9519-22a4a6a9150d",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9696",
+							"path": [
+								"v2.0",
+								"subnets",
+								"032aef6a-f60f-4b27-9519-22a4a6a9150d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "compute (hypervisor)",
+			"item": [
+				{
+					"name": "get list compute",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-hypervisors",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-hypervisors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "instance (server)",
+			"item": [
+				{
+					"name": "get list instance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list instance with detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/detail",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"detail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-OpenStack-Nova-API-Version",
+								"value": "2.74",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"server\": {\n        \"name\": \"test-api\",\n        \"imageRef\": \"{{glanceRef}}\",\n        \"flavorRef\": \"{{flavorRef}}\",\n        \"networks\": [\n            {\n                \"uuid\": \"{{networkRef}}\"\n            }\n        ],\n        \"user_data\" : \"I2Nsb3VkLWNvbmZpZwpzeXN0ZW1faW5mbzoKICBkZWZhdWx0X3VzZXI6CiAgICBuYW1lOiBoYXNoZW0KICAgIGxvY2tfcGFzc3dkOiB0cnVlCiAgICBzdWRvOiBbIkFMTD0oQUxMKSBOT1BBU1NXRDpBTEwiXQpwYXNzd29yZDogMTIzNDU2CmNocGFzc3dkOiB7IGV4cGlyZTogRmFsc2UgfQpzc2hfcHdhdXRoOiBUcnVlCnBhY2thZ2VfdXBkYXRlOiB0cnVlCmRpc2FibGVfcm9vdDogZmFsc2UKYXB0X21pcnJvcjogaHR0cDovL21pcnJvci5pcmFuc2VydmVyLmNvbS91YnVudHUvCnBhY2thZ2VzOgogIC0gcWVtdS1ndWVzdC1hZ2VudApydW5jbWQ6CiAgLSBbIHN5c3RlbWN0bCwgZW5hYmxlLCBxZW11LWd1ZXN0LWFnZW50IF0KICAtIFsgc3lzdGVtY3RsLCBzdGFydCwgcWVtdS1ndWVzdC1hZ2VudC5zZXJ2aWNlIF0=\"\n    }\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create instance with volume",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"server\" : {\n        \"name\" : \"api-inst\",\n        \"flavorRef\": \"{{flavorRef}}\",\n        \"networks\" : [{\n            \"uuid\" : \"{{networkRef}}\"\n        }],\n        \"block_device_mapping_v2\": [{\n            \"uuid\": \"{{glanceRef}}\",\n            \"source_type\": \"image\",\n            \"destination_type\": \"volume\",\n            \"boot_index\": 0,\n            \"volume_size\": \"20\"\n        }]\n    }\n}\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get instance detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "live migration instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"os-migrateLive\": {\r\n        \"host\": \"compute2\",\r\n        \"block_migration\": \"false\",\r\n        \"disk_over_commit\":\"False\"\r\n    }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resize instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"resize\" : {\r\n        \"flavorRef\" : \"{{flavorRef}}\",\r\n        \"OS-DCF:diskConfig\": \"AUTO\"\r\n    }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "confirmResize instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"confirmResize\" : null\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "stop instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"os-stop\" : null\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "start instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"os-start\" : null\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suspend instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"suspend\": null\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reboot instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reboot\" : {\r\n        \"type\" : \"HARD\"\r\n    }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rescue instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rescue\": {\r\n        \"adminPass\": \"{{adminPass}}\",\r\n        \"rescue_image_ref\": \"{{flavorRef}}\"\r\n    }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"forceDelete\": null\r\n}\r\n"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rebuild instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rebuild\" : {\r\n        \"accessIPv4\" : \"185.255.91.122\",\r\n        \"OS-DCF:diskConfig\": \"AUTO\",\r\n        \"imageRef\" : \"2b457078-1768-4d03-b7fc-cb183dd12185\",\r\n        \"adminPass\" : \"123\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change instance password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"server\":{\r\n       \"username\":\"ubuntu\",\r\n       \"password\":\"123\",\r\n       \"instance_id\":\"{{instanceRef}}\"\r\n   }\r\n}\r\n"
+						},
+						"url": {
+							"raw": "http://{{ip}}:6969/v1/server/change_password",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "6969",
+							"path": [
+								"v1",
+								"server",
+								"change_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get vnc",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-OpenStack-Nova-API-Version",
+								"value": "2.1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"os-getVNCConsole\": {\r\n        \"type\": \"novnc\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "get vnc",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Auth-Token",
+										"value": "{{X-Auth-Token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "X-OpenStack-Nova-API-Version",
+										"value": "2.1",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"os-getVNCConsole\": {\r\n        \"type\": \"novnc\"\r\n    }\r\n}"
+								},
+								"url": {
+									"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+									"protocol": "https",
+									"host": [
+										"{{ip}}"
+									],
+									"port": "8774",
+									"path": [
+										"v2.1",
+										"servers",
+										"{{instanceRef}}",
+										"action"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-length",
+									"value": "132"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "openstack-api-version",
+									"value": "compute 2.1"
+								},
+								{
+									"key": "x-openstack-nova-api-version",
+									"value": "2.1"
+								},
+								{
+									"key": "vary",
+									"value": "OpenStack-API-Version"
+								},
+								{
+									"key": "vary",
+									"value": "X-OpenStack-Nova-API-Version"
+								},
+								{
+									"key": "x-openstack-request-id",
+									"value": "req-5100facd-50dd-4563-9a60-7d03c4fb95f8"
+								},
+								{
+									"key": "x-compute-request-id",
+									"value": "req-5100facd-50dd-4563-9a60-7d03c4fb95f8"
+								},
+								{
+									"key": "connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"console\": {\n        \"type\": \"novnc\",\n        \"url\": \"https://172.20.12.1:6080/vnc_lite.html?path=%3Ftoken%3D3061fad6-5eb4-41fe-a5f5-fafd4b2ee319\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "create backup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"createBackup\": {\r\n        \"name\": \"Backup 1\",\r\n        \"backup_type\": \"daily\",\r\n        \"rotation\": 1\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create snapshot",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"createImage\" : {\r\n        \"name\" : \"foo-image\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add security group to instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"addSecurityGroup\": {\r\n        \"name\": \"0d4542f1-b30a-4e68-9e07-101b537ea567\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove security group to instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"removeSecurityGroup\": {\r\n        \"name\": \"0d4542f1-b30a-4e68-9e07-101b537ea567\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deattach interface",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/os-interface/{{interface_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"os-interface",
+								"{{interface_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all  interface",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/os-interface",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"os-interface"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "migration instance with compute",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"migrate\": {\r\n        \"host\": \"compute24\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "volume (BlockStorage)",
+			"item": [
+				{
+					"name": "get list volume",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-volumes",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-volumes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all volume detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-volumes/detail",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-volumes",
+								"detail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one volume detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-volumes/{{volume_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-volumes",
+								"{{volume_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create volume",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"volume\": {\r\n        \"display_name\": \"test volume old api\",\r\n        \"display_description\": \"Volume Description\",\r\n        \"size\": 10\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-volumes",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-volumes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attach volume instance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"volumeAttachment\": {\r\n        \"volumeId\": \"{{volume_id}}\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/os-volume_attachments",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"os-volume_attachments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detach  volume  instance",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/os-volume_attachments/{{volume_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"os-volume_attachments",
+								"{{volume_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "extend volume",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"os-extend\": {\r\n        \"new_size\": 30\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8776/v3/{{project_id}}/volumes/{{volume_id}}/action",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8776",
+							"path": [
+								"v3",
+								"{{project_id}}",
+								"volumes",
+								"{{volume_id}}",
+								"action"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "snapshot",
+			"item": [
+				{
+					"name": "get list snapshot",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-snapshots",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-snapshots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create snapshot",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"snapshot\": {\r\n        \"display_name\": \"snap-001\",\r\n        \"display_description\": \"Daily backup\",\r\n        \"volume_id\": \"{{volume_id}}\",\r\n        \"force\": true\r\n     }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-snapshots",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-snapshots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one snapshot detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"snapshot\": {\r\n        \"display_name\": \"snap-001\",\r\n        \"display_description\": \"Daily backup\",\r\n        \"volume_id\": \"{{volume_id}}\",\r\n        \"force\": true\r\n     }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-snapshots/{{snapshot_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-snapshots",
+								"{{snapshot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete snapshot",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/os-snapshots/{{snapshot_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"os-snapshots",
+								"{{snapshot_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "backup (freezer)",
+			"item": [
+				{
+					"name": "list backup",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/backups",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"backups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list actions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/actions",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"actions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get  action detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/actions/{{action_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"actions",
+								"{{action_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create action",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"freezer_action\":\r\n            {\r\n                \"backup_name\": \"test-api\",\r\n                \"container\": \"/home/backup\",\r\n                \"no_incremental\": true,\r\n                \"path_to_backup\": \"/home/backup\",\r\n                \"snapshot\": false,\r\n                \"action\": \"backup\",\r\n                \"storage\":\"local\",\r\n                \"mode\": \"nova\",\r\n                \"remove_older_than\": 365,\r\n                \"log_file\": \"/var/log/freezer/job0001.log\"\r\n            },\r\n            \"max_retries\": 5,\r\n            \"max_retries_interval\": 6\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/actions",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"actions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update action",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"freezer_action\":\r\n            {\r\n                \"backup_name\": \"test-api\",\r\n                \"container\": \"/home/backup\",\r\n                \"no_incremental\": true,\r\n                \"path_to_backup\": \"/home/backup\",\r\n                \"snapshot\": false,\r\n                \"action\": \"backup\",\r\n                \"storage\":\"local\",\r\n                \"mode\": \"nova\",\r\n                \"engine\":\"nova\",\r\n                \"remove_older_than\": 365,\r\n                \"log_file\": \"/var/log/freezer/job0001.log\"\r\n            },\r\n            \"max_retries\": 5,\r\n            \"max_retries_interval\": 6\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/actions/{{action_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"actions",
+								"{{action_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list Clients",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/clients",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list jobs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/jobs",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create job",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"client_id\":\"c53df346729a4a6daf3d657a0d50f102\",\r\n    \"description\": \"Test-0001\",\r\n    \"job_schedule\": {\r\n        \"schedule_interval\": \"5 minutes\",\r\n        \"status\": \"scheduled\",\r\n        \"event\": \"start\"\r\n    },\r\n    \"job_actions\": [\r\n        {\r\n            \"max_retries\": 5,\r\n            \"max_retries_interval\": 6,\r\n            \"freezer_action\": {\r\n                \"backup_name\": \"test-api\",\r\n                \"container\": \"/home/backup\",\r\n                \"no_incremental\": true,\r\n                \"path_to_backup\": \"/home/backup\",\r\n                \"snapshot\": false,\r\n                \"action\": \"backup\",\r\n                \"storage\":\"local\",\r\n                \"mode\": \"nova\",\r\n                \"engine\":\"nova\",\r\n                \"nova-inst-id\":\"dd6f68a3-e972-4cf5-a95d-4beb981a7a91\",\r\n                \"remove_older_than\": 365,\r\n                \"log_file\": \"/var/log/freezer/job0001.log\"\r\n            }\r\n        }\r\n]\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/jobs",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update job",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"client_id\":\"c53df346729a4a6daf3d657a0d50f102\",\r\n    \"description\": \"Test-0001\",\r\n    \"job_schedule\": {\r\n        \"schedule_interval\": \"5 minutes\",\r\n        \"status\": \"scheduled\",\r\n        \"event\": \"start\"\r\n    },\r\n    \"job_actions\": [\r\n        {\r\n            \"max_retries\": 5,\r\n            \"max_retries_interval\": 6,\r\n            \"freezer_action\": {\r\n                \"backup_name\": \"test-api\",\r\n                \"container\": \"/home/backup\",\r\n                \"no_incremental\": true,\r\n                \"path_to_backup\": \"/home/backup\",\r\n                \"snapshot\": false,\r\n                \"action\": \"backup\",\r\n                \"storage\":\"local\",\r\n                \"mode\": \"nova\",\r\n                \"remove_older_than\": 365,\r\n                \"log_file\": \"/var/log/freezer/job0001.log\"\r\n            }\r\n        }\r\n]\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/jobs/{{job_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"jobs",
+								"{{job_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete job",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/jobs/028781ca820e473cb7d6270f90fdd289",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"jobs",
+								"028781ca820e473cb7d6270f90fdd289"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list sessions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/sessions",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create session",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"session_tag\":20,\r\n   \"description\":\"Webapp Database backup \",\r\n   \"hold_off\":30,\r\n   \"time_started\":1607338585,\r\n   \"schedule\":{\r\n      \"schedule_interval\":\"1 hours\",\r\n      \"status\":\"scheduled\",\r\n      \"event\":\"start\"\r\n   }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/sessions",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add job to sessions",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/sessions/{{sessions_id}}/jobs/{{job_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"sessions",
+								"{{sessions_id}}",
+								"jobs",
+								"{{job_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "start sessions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/sessions/{{sessions_id}}/actions",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"sessions",
+								"{{sessions_id}}",
+								"actions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete session",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8585/v2/{{project_id}}/sessions/{{sessions_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8585",
+							"path": [
+								"v2",
+								"{{project_id}}",
+								"sessions",
+								"{{sessions_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "monitoring",
+			"item": [
+				{
+					"name": "get all resource",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8041/v1/resource",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8041",
+							"path": [
+								"v1",
+								"resource"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all resorce instance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8041/v1/resource/instance/{{instanceRef}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8041",
+							"path": [
+								"v1",
+								"resource",
+								"instance",
+								"{{instanceRef}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show instance metric",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8041/v1/metric/{{metric_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8041",
+							"path": [
+								"v1",
+								"metric",
+								"{{metric_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "measures of metric instance ",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8041/v1/metric/{{metric_id}}/measures",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8041",
+							"path": [
+								"v1",
+								"metric",
+								"{{metric_id}}",
+								"measures"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save measures of metric instance ",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"timestamp\": \"2019-10-06T14:33:57\",\r\n    \"value\": 43.1\r\n  },\r\n  {\r\n    \"timestamp\": \"2019-10-06T14:34:12\",\r\n    \"value\": 12\r\n  },\r\n  {\r\n    \"timestamp\": \"2019-10-06T14:34:20\",\r\n    \"value\": 2\r\n  }\r\n]"
+						},
+						"url": {
+							"raw": "http://{{ip}}:8041/v1/resource/generic/5831590b-f777-43cf-b371-f0e972e302e0/metric/cpu/measures",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8041",
+							"path": [
+								"v1",
+								"resource",
+								"generic",
+								"5831590b-f777-43cf-b371-f0e972e302e0",
+								"metric",
+								"cpu",
+								"measures"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "orchestration (heat)",
+			"item": [
+				{
+					"name": "get list stack",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8004/v1/{{project_id}}/stacks",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8004",
+							"path": [
+								"v1",
+								"{{project_id}}",
+								"stacks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create stack",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"files\": {},\r\n    \"disable_rollback\": true,\r\n    \"parameters\": {},\r\n    \"stack_name\": \"teststack\",\r\n    \"template\": {\r\n        \"heat_template_version\": \"2016-04-08T00:00:00.000Z\",\r\n        \"description\": \"Stack that launches a single server\",\r\n        \"parameters\": {\r\n            \"public_network\": {\r\n                \"type\": \"string\",\r\n                \"default\": \"public\"\r\n            },\r\n            \"floating_ip\": {\r\n                \"type\": \"string\",\r\n                \"constraints\": [\r\n                    {\r\n                        \"allowed_pattern\": \"[0-9a-f-]{36}\",\r\n                        \"description\": \"The ID of a floating IP address\"\r\n                    }\r\n                ]\r\n            },\r\n            \"image\": {\r\n                \"type\": \"string\",\r\n                \"constraints\": [\r\n                    {\r\n                        \"custom_constraint\": \"glance.image\"\r\n                    }\r\n                ]\r\n            },\r\n            \"flavor\": {\r\n                \"type\": \"string\",\r\n                \"constraints\": [\r\n                    {\r\n                        \"custom_constraint\": \"nova.flavor\"\r\n                    }\r\n                ]\r\n            },\r\n            \"key_name\": {\r\n                \"type\": \"string\",\r\n                \"description\": \"SSH key pair\",\r\n                \"constraints\": [\r\n                    {\r\n                        \"custom_constraint\": \"nova.keypair\"\r\n                    }\r\n                ]\r\n            }\r\n        },\r\n        \"resources\": {\r\n            \"host\": {\r\n                \"type\": \"OS::Nova::Server\",\r\n                \"depends_on\": [\r\n                    \"port\"\r\n                ],\r\n                \"properties\": {\r\n                    \"name\": {\r\n                        \"list_join\": [\r\n                            \"-\",\r\n                            [\r\n                                {\r\n                                    \"get_param\": \"OS::stack_name\"\r\n                                },\r\n                                \"server\"\r\n                            ]\r\n                        ]\r\n                    },\r\n                    \"user_data_format\": \"RAW\",\r\n                    \"user_data\": \"#cloud-config\\npassword: 123456\\nchpasswd: { expire: False }\\nssh_pwauth: True\\t\\t\\t\\n\",\r\n                    \"image\": {\r\n                        \"get_param\": \"image\"\r\n                    },\r\n                    \"flavor\": {\r\n                        \"get_param\": \"flavor\"\r\n                    },\r\n                    \"networks\": [\r\n                        {\r\n                            \"port\": {\r\n                                \"get_resource\": \"port\"\r\n                            }\r\n                        }\r\n                    ],\r\n                    \"key_name\": {\r\n                        \"get_param\": \"key_name\"\r\n                    }\r\n                }\r\n            },\r\n            \"allow_ssh\": {\r\n                \"type\": \"OS::Neutron::SecurityGroup\",\r\n                \"properties\": {\r\n                    \"description\": \"allow incoming SSH and ICMP traffic from anywhere.\",\r\n                    \"name\": {\r\n                        \"list_join\": [\r\n                            \"-\",\r\n                            [\r\n                                {\r\n                                    \"get_param\": \"OS::stack_name\"\r\n                                },\r\n                                \"kickstart\",\r\n                                \"allow incoming traffic, tcp port 22 and icmp\"\r\n                            ]\r\n                        ]\r\n                    },\r\n                    \"rules\": [\r\n                        {\r\n                            \"direction\": \"ingress\",\r\n                            \"remote_ip_prefix\": \"0.0.0.0/0\",\r\n                            \"port_range_min\": 22,\r\n                            \"port_range_max\": 22,\r\n                            \"protocol\": \"tcp\"\r\n                        },\r\n                        {\r\n                            \"direction\": \"ingress\",\r\n                            \"remote_ip_prefix\": \"0.0.0.0/0\",\r\n                            \"protocol\": \"icmp\"\r\n                        }\r\n                    ]\r\n                }\r\n            },\r\n            \"net\": {\r\n                \"type\": \"OS::Neutron::Net\",\r\n                \"properties\": {\r\n                    \"name\": {\r\n                        \"list_join\": [\r\n                            \"-\",\r\n                            [\r\n                                {\r\n                                    \"get_param\": \"OS::stack_name\"\r\n                                },\r\n                                \"example-net\"\r\n                            ]\r\n                        ]\r\n                    }\r\n                }\r\n            },\r\n            \"subnet\": {\r\n                \"type\": \"OS::Neutron::Subnet\",\r\n                \"depends_on\": [\r\n                    \"net\"\r\n                ],\r\n                \"properties\": {\r\n                    \"name\": {\r\n                        \"list_join\": [\r\n                            \"-\",\r\n                            [\r\n                                {\r\n                                    \"get_param\": \"OS::stack_name\"\r\n                                },\r\n                                \"example-subnet\"\r\n                            ]\r\n                        ]\r\n                    },\r\n                    \"dns_nameservers\": [\r\n                        \"8.8.8.8\",\r\n                        \"8.8.4.4\"\r\n                    ],\r\n                    \"network\": {\r\n                        \"get_resource\": \"net\"\r\n                    },\r\n                    \"ip_version\": 4,\r\n                    \"cidr\": \"10.0.0.0/24\",\r\n                    \"allocation_pools\": [\r\n                        {\r\n                            \"start\": \"10.0.0.10\",\r\n                            \"end\": \"10.0.0.250\"\r\n                        }\r\n                    ]\r\n                }\r\n            },\r\n            \"router\": {\r\n                \"type\": \"OS::Neutron::Router\",\r\n                \"properties\": {\r\n                    \"external_gateway_info\": {\r\n                        \"network\": {\r\n                            \"get_param\": \"public_network\"\r\n                        }\r\n                    },\r\n                    \"name\": {\r\n                        \"list_join\": [\r\n                            \"-\",\r\n                            [\r\n                                {\r\n                                    \"get_param\": \"OS::stack_name\"\r\n                                },\r\n                                \"example-router\"\r\n                            ]\r\n                        ]\r\n                    }\r\n                }\r\n            },\r\n            \"router_subnet_bridge\": {\r\n                \"type\": \"OS::Neutron::RouterInterface\",\r\n                \"depends_on\": [\r\n                    \"router\",\r\n                    \"subnet\"\r\n                ],\r\n                \"properties\": {\r\n                    \"router\": {\r\n                        \"get_resource\": \"router\"\r\n                    },\r\n                    \"subnet\": {\r\n                        \"get_resource\": \"subnet\"\r\n                    }\r\n                }\r\n            },\r\n            \"port\": {\r\n                \"type\": \"OS::Neutron::Port\",\r\n                \"depends_on\": [\r\n                    \"net\",\r\n                    \"allow_ssh\"\r\n                ],\r\n                \"properties\": {\r\n                    \"network\": {\r\n                        \"get_resource\": \"net\"\r\n                    },\r\n                    \"security_groups\": [\r\n                        {\r\n                            \"get_resource\": \"allow_ssh\"\r\n                        }\r\n                    ]\r\n                }\r\n            },\r\n            \"floating_ip_association\": {\r\n                \"type\": \"OS::Neutron::FloatingIPAssociation\",\r\n                \"depends_on\": [\r\n                    \"port\",\r\n                    \"router_subnet_bridge\"\r\n                ],\r\n                \"properties\": {\r\n                    \"floatingip_id\": {\r\n                        \"get_param\": \"floating_ip\"\r\n                    },\r\n                    \"port_id\": {\r\n                        \"get_resource\": \"port\"\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8004/v1/{{project_id}}/stacks",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8004",
+							"path": [
+								"v1",
+								"{{project_id}}",
+								"stacks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get detail stack",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8004/v1/{{project_id}}/stacks/{{stack_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8004",
+							"path": [
+								"v1",
+								"{{project_id}}",
+								"stacks",
+								"{{stack_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "swap ip",
+			"item": [
+				{
+					"name": "get all  interface",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/os-interface",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"os-interface"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deattach interface",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/os-interface/{{interface_id}}",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"os-interface",
+								"{{interface_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attach interface",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"interfaceAttachment\": {\r\n                \"fixed_ips\": [\r\n            {\r\n                \"ip_address\":\"85.208.253.85\"\r\n            }\r\n        ],\r\n        \"net_id\": \"{{networkRef}}\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "https://{{ip}}:8774/v2.1/servers/{{instanceRef}}/os-interface",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "8774",
+							"path": [
+								"v2.1",
+								"servers",
+								"{{instanceRef}}",
+								"os-interface"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LoadBalancer",
+			"item": [
+				{
+					"name": "get list load balancer",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9876/v2/lbaas/loadbalancers",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9876",
+							"path": [
+								"v2",
+								"lbaas",
+								"loadbalancers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete load balancer",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9876/v2/lbaas/loadbalancers/45ae4dfb-12dd-49c1-9568-35fd3c3c55ae",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9876",
+							"path": [
+								"v2",
+								"lbaas",
+								"loadbalancers",
+								"45ae4dfb-12dd-49c1-9568-35fd3c3c55ae"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list listeners",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9876/v2/lbaas/listeners",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9876",
+							"path": [
+								"v2",
+								"lbaas",
+								"listeners"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete listeners",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9876/v2/lbaas/listeners/5b22deb7-978b-4e85-848f-2eea19805cbc",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9876",
+							"path": [
+								"v2",
+								"lbaas",
+								"listeners",
+								"5b22deb7-978b-4e85-848f-2eea19805cbc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list pools",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9876/v2/lbaas/pools",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9876",
+							"path": [
+								"v2",
+								"lbaas",
+								"pools"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete pools",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9876/v2/lbaas/pools/0162a541-ef95-44da-9396-cd3761622b02",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9876",
+							"path": [
+								"v2",
+								"lbaas",
+								"pools",
+								"0162a541-ef95-44da-9396-cd3761622b02"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get list members",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9876/v2/lbaas/pools/0162a541-ef95-44da-9396-cd3761622b02/members",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9876",
+							"path": [
+								"v2",
+								"lbaas",
+								"pools",
+								"0162a541-ef95-44da-9396-cd3761622b02",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete members",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "{{X-Auth-Token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{ip}}:9876/v2/lbaas/pools/0162a541-ef95-44da-9396-cd3761622b02/members/257fffbc-c686-4744-adce-cc6c5fd892bd",
+							"protocol": "https",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "9876",
+							"path": [
+								"v2",
+								"lbaas",
+								"pools",
+								"0162a541-ef95-44da-9396-cd3761622b02",
+								"members",
+								"257fffbc-c686-4744-adce-cc6c5fd892bd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "gAAAAABda0NrPheNPqE3FNp6-PMQQxHCcURwd8S2sbUj7IjrIt5YSpHEfUS_sH9OQ5TCklzqhuEbEf7iJUXkWPQ6UjWUfk6A-ZWk4Zy4O3N0b6vdFeP5Of8zL1p4NFcsrItj4u-T78AEk4JnTw4IbH6Ak7Y2rXxfLNgDYCbfJL2N1yhzWWDcHT8",
+			"type": "string"
+		}
+	]
+}
