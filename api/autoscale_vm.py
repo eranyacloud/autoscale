@@ -4,6 +4,7 @@ from .flavor import Flavor
 from .networks import Network
 from .block_resize import BlockResize
 from .volume import Volume
+from .octavia import Octavia
 from . import config
 import json
 import time
@@ -24,6 +25,18 @@ class AutoScaleVm():
         self.auth=Authonticate(config.username,config.password)
         header= {"X-Auth-Token":self.auth.getToken(),"Content-Type":"application/json"}
         url = f"http://{config.cloud_ip}:8774/v2.1/servers/{self.instance_id}"
+        response = requests.get(url,headers=header,verify=False)
+        if response.status_code == 200:
+            print("GET request was successful!->get_instance")
+            return response.json()  # Return the JSON data
+        else:
+            print("GET request failed with status code:", response.status_code)
+            return None  # Return None to indicate failure
+
+    def get_interface(self,instance_id):
+        self.auth=Authonticate(config.username,config.password)
+        header= {"X-Auth-Token":self.auth.getToken(),"Content-Type":"application/json"}
+        url = f"http://{config.cloud_ip}:8774/v2.1/servers/{instance_id}/os-interface"
         response = requests.get(url,headers=header,verify=False)
         if response.status_code == 200:
             print("GET request was successful!->get_instance")
@@ -97,6 +110,7 @@ class AutoScaleVm():
                         print("Get request failed with status code:", response.status_code)
                         break  # Exit the loop since your action is complete
                 time.sleep(60)
+
             while True:
                 self.instance_id = result["server"].get("id")
                 status_machine= self.get_instance()

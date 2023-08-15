@@ -79,7 +79,6 @@ def do_autoscale(data:instance_mode):
         for key in response_instance["server"]["addresses"].keys():
             network_array.append(key)
         #print("dynamic_key",network_array)
-
         autoscale_vm = AutoScaleVm(None,response_instance["server"]["tenant_id"],response_instance["server"]["os-extended-volumes:volumes_attached"][0].get("id"),network_array,response_instance["server"]["flavor"].get("id"))
         response_snapshot = autoscale_vm.get_snapshot()
         volume = {
@@ -89,7 +88,41 @@ def do_autoscale(data:instance_mode):
 
         autoscale_vm = AutoScaleVm(None,response_instance["server"]["tenant_id"],response_instance["server"]["os-extended-volumes:volumes_attached"][0].get("id"),network_array,response_instance["server"]["flavor"].get("id"),volume)
         response_autoscale = autoscale_vm.do_autoscale()
+        print("---------------------------")
+        network_key = next(iter(response_autoscale['Network']))  # Get the dynamic key under 'Network'
+        ip_address = response_autoscale['Network'][network_key][0]['addr']
+##=========================================== Loadbalancer ======================================================
+        response_autoscale = autoscale_vm.get_interface(data.instance_id)
+        ha = Octavia(project_id=response_instance["server"]["tenant_id"],instance_id=data.instance_id)
+        ha_get = ha.get_octavia()
+        pool_ids = []
+        pool_exsit=[]
 
+        for lb in ha_get['loadbalancers']:
+            for pool in lb['pools']:
+                pool_ids.append(pool['id'])
+        i = 0
+        member_array = []
+        pool_id = []
+        for i in pool_ids:
+            member_array.append(ha.get_pools(i))
+            pool_id.append(i)
+
+        members_array = {
+            "data": member_array,
+            "pool_id": pool_id
+        }
+
+        for entry in members_array["data"]:
+            for member in entry["members"]:
+                #https://{{ip}}:9876/v2/lbaas/pools/80887f02-a8ef-4b3a-9763-0f90a34208ca/members
+                if member.get("address") == response_autoscale["interfaceAttachments"][0]["fixed_ips"][0].get("ip_address"):
+                    for j in members_array["pool_id"]:
+                        results = ha.create_member(j,ip_address)
+                        print("==>",results)
+
+
+##====================================================end Loadbalancer code===========================================
 
         return response_autoscale
 

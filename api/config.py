@@ -1,3 +1,4 @@
-cloud_ip = "your_ip"
+cloud_ip = ""
 username = ""
 password = ""
+
