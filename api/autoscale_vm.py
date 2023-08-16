@@ -119,6 +119,10 @@ class AutoScaleVm():
 
 
 
+
+
+
+
 def error_result(status, message):
     results = {
         "badRequest": {
