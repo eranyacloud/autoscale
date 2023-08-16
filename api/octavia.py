@@ -48,7 +48,7 @@ class Octavia():
             raise InvalidUsage(error_result("fail","key error missing %s"%err),status_code=400)
 
 
-    def create_member(self,pool_id,address_ip):
+    def create_member(self,pool_id,address_ip,protocol_port=80):
         try:
             self.auth=Authonticate(config.username,config.password)
             header= {"X-Auth-Token":self.auth.getToken(),"Content-Type":"application/json"}
@@ -56,10 +56,10 @@ class Octavia():
             body={
 
                 "member": {
-                    "name": "web-server-1",
+                    "name": "autoscale",
                     "admin_state_up": True,
                     "address": address_ip,
-                    "protocol_port": "80"
+                    "protocol_port": protocol_port
                 }
             }
 

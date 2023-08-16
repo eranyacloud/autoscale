@@ -46,10 +46,10 @@ class AutoScaleVm():
             return None  # Return None to indicate failure
 
 
-    def get_snapshot(self):
+    def get_snapshot(self,project_id):
         self.auth=Authonticate(config.username,config.password)
         header= {"X-Auth-Token":self.auth.getToken(),"Content-Type":"application/json"}
-        url = f"http://{config.cloud_ip}:8776/v3/{self.project_id}/snapshots"
+        url = f"http://{config.cloud_ip}:8776/v3/{project_id}/snapshots"
         response = requests.get(url,headers=header,verify=False)
 
         if response.status_code == 200:
@@ -59,30 +59,21 @@ class AutoScaleVm():
             print("GET request failed with status code:", response.status_code)
             return None  # Return None to indicate failure
 
-    def do_autoscale(self):
+    def do_autoscale(self,network,volume_data,flavor_id):
         try:
             self.auth=Authonticate(config.username,config.password)
             header= {"X-Auth-Token":self.auth.getToken(),"Content-Type":"application/json"}
             header= {"X-Auth-Token":self.auth.getToken(),"Content-Type":"application/json"}
-            ############## get flavor ###############
-            # flavor_info=Flavor()
-            # flavor_get = flavor_info.get_flavor()
-            # sorted_data = sorted(flavor_get["flavors"], key=lambda x: (x["disk"], x["vcpus"], x["ram"]))
-            # index_plus = 0
-            # flavor_array = []
-            # for index,item in enumerate(sorted_data):
-            #     flavor_array.append(item)
-            #     if item.get('id') == self.flavor_id:
-            #         index_plus = index
             url = f"http://{config.cloud_ip}:8774/v2.1/servers"
-            network_info = Network(self.network[0])
+            network_info = Network(network[0])
             network_get = network_info.get_network()
-            create_volume_info = Volume(self.volume_data["snapshot_id"],self.volume_data["size"])
+            create_volume_info = Volume(volume_data["snapshot_id"],volume_data["size"])
             create_volume = create_volume_info.Create_volume_from_snapshot()
+
             body = {
                 "server" : {
                     "name" : "autoscale",
-                    "flavorRef": self.flavor_id, #flavor_array[index_plus+1].get('id'),
+                    "flavorRef": flavor_id, #flavor_array[index_plus+1].get('id'),
                     "networks" : [{
                         "uuid" : network_get
                     }],
@@ -95,7 +86,7 @@ class AutoScaleVm():
                     }]
                 }
             }
-
+            print("body:",body)
             result = ""
             while True:
                 get_volume_info = Volume(None,None,create_volume["volume"].get("id"))

@@ -79,16 +79,17 @@ def do_autoscale(data:instance_mode):
         for key in response_instance["server"]["addresses"].keys():
             network_array.append(key)
         #print("dynamic_key",network_array)
-        autoscale_vm = AutoScaleVm(None,response_instance["server"]["tenant_id"],response_instance["server"]["os-extended-volumes:volumes_attached"][0].get("id"),network_array,response_instance["server"]["flavor"].get("id"))
-        response_snapshot = autoscale_vm.get_snapshot()
+        #autoscale_vm = AutoScaleVm(None,response_instance["server"]["tenant_id"],response_instance["server"]["os-extended-volumes:volumes_attached"][0].get("id"),network_array,response_instance["server"]["flavor"].get("id"))
+        autoscale_vm = AutoScaleVm()
+        response_snapshot = autoscale_vm.get_snapshot(response_instance["server"]["tenant_id"])
         volume = {
              "snapshot_id": response_snapshot[0].get("id"),
              "size":response_snapshot[0].get("size")
          }
 
-        autoscale_vm = AutoScaleVm(None,response_instance["server"]["tenant_id"],response_instance["server"]["os-extended-volumes:volumes_attached"][0].get("id"),network_array,response_instance["server"]["flavor"].get("id"),volume)
-        response_autoscale = autoscale_vm.do_autoscale()
-        print("---------------------------")
+        #autoscale_vm = AutoScaleVm(None,response_instance["server"]["tenant_id"],response_instance["server"]["os-extended-volumes:volumes_attached"][0].get("id"),network_array,response_instance["server"]["flavor"].get("id"),volume)
+        autoscale_vm = AutoScaleVm()
+        response_autoscale = autoscale_vm.do_autoscale(network_array,volume,response_instance["server"]["flavor"].get("id"))
         network_key = next(iter(response_autoscale['Network']))  # Get the dynamic key under 'Network'
         ip_address = response_autoscale['Network'][network_key][0]['addr']
 ##=========================================== Loadbalancer ======================================================
@@ -115,11 +116,11 @@ def do_autoscale(data:instance_mode):
 
         for entry in members_array["data"]:
             for member in entry["members"]:
-                #https://{{ip}}:9876/v2/lbaas/pools/80887f02-a8ef-4b3a-9763-0f90a34208ca/members
                 if member.get("address") == response_autoscale["interfaceAttachments"][0]["fixed_ips"][0].get("ip_address"):
                     for j in members_array["pool_id"]:
-                        results = ha.create_member(j,ip_address)
-                        print("==>",results)
+                        results = ha.create_member(j,ip_address,member.get("protocol_port"))
+
+
 
 
 ##====================================================end Loadbalancer code===========================================
@@ -130,3 +131,22 @@ def do_autoscale(data:instance_mode):
         print("ee-->",err)
 
 
+
+
+
+def error_result(status, message):
+    results = {
+        "badRequest": {
+            "code": status,
+            "message": message
+        }
+    }
+    return results
+
+
+def success_result(status,message):
+    results={}
+    results["data"]={}
+    results["data"]["status"]=status
+    results["data"]['message']=message
+    return JSONResponse(results)
