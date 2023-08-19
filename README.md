@@ -34,3 +34,8 @@ cp autoscale_vm.service /etc/systemd/system/autoscale_vm.service
 
 systemctl restart autoscale_vm.service
 ```
+## Monitoring as service
+if you want to run monitoring as a service you can use this project 
+```
+https://github.com/eranyacloud/eranyastack_monitor
+```
